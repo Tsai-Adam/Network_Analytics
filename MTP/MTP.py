@@ -6,16 +6,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # read data
-teams = pd.read_csv("/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/MTP/team_employee_affiliations.csv")
+teams = pd.read_csv("team_employee_affiliations.csv")
 teams.head()
 teams.tail()
 
-outcome = pd.read_csv("/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/MTP/project_outcomes.csv")
+outcome = pd.read_csv("project_outcomes.csv")
 outcome.head()
 outcome.tail()
 outcome.describe().T
 
-ke = pd.read_csv("/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/MTP/knowledge_exchange_network.csv",
+ke = pd.read_csv("knowledge_exchange_network.csv",
 sep=",", header=None, names=["u", "v"])
 ke.head(15)
 ke.tail()

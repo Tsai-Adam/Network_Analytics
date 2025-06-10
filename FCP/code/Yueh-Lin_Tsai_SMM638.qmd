@@ -1,0 +1,453 @@
+---
+title: "Final Course Project"
+author: "Yueh-Lin Tsai"
+date: last-modified
+abstract-title: Overview
+abstract: This is Final Course Project
+warning: false
+format: 
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+    toc-title: Table of Contents 
+    toc-depth: 2
+    toc-location: right
+    number-sections: true
+    citations-hover: false
+    footnotes-hover: false
+    crossrefs-hover: false
+    theme: journal
+    fig-width: 9
+    fig-height: 6
+  typst: default
+  ipynb: default
+  docx: default
+---
+
+# Import libraries
+## R library
+```{r}
+library(reticulate)
+use_condaenv("smm638", required = TRUE)
+library(car)
+library(sna)
+library(ergm)
+library(dplyr)
+library(tidyr)
+```
+## Python library
+```{python}
+import pandas as pd
+import networkx as nx
+from networkx.algorithms import bipartite as bp
+import matplotlib.pyplot as plt
+import numpy as np
+import itertools
+from IPython.display import Image
+import matplotlib
+from graph_tool.all import *
+import random
+```
+# Load data
+## HR_edges.csv
+```{python}
+# load data
+fr = pd.read_csv('/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_edges.csv')
+# data preview
+fr.head()
+
+```
+## HR_genres.json
+```{python}
+import json
+with open('/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_genres.json', 'r') as f:
+    pr_json = json.load(f)
+pr_json["11542"]
+
+```
+### Convert the dictionary into a Pandas 
+```{python}
+pr = pd.json_normalize(pr_json).T
+pr.rename({0: 'genres'}, axis=1, inplace=True)
+pr.head()
+pr_original = pr
+```
+### Separate rows
+```{python}
+pr = pr.explode('genres')
+pr.reset_index(inplace=True)
+pr.rename({'index': 'user_id'}, axis=1, inplace=True)
+pr.head()
+```
+# two-mode (Bipartite) networks
+## data botton_nodes top_nodes edges
+```{python}
+bottom_nodes = pr["user_id"].drop_duplicates().reset_index(drop=True).to_numpy()
+top_nodes = pr["genres"].drop_duplicates().reset_index(drop=True).to_numpy()
+edges = pr[['user_id', 'genres']].values.tolist()
+```
+## Graph creation
+```{python}
+# empty graph
+bg = nx.Graph()
+# add nodes
+bg.add_nodes_from(bottom_nodes, bipartite=0)
+bg.add_nodes_from(top_nodes, bipartite=1)
+# get nx object
+bg.add_edges_from(edges)
+# `is bipartite` check
+is_bip = nx.is_bipartite(bg)
+```
+## Weighted projections of the two-mode networks
+```{python}
+#g_b_w = bp.weighted_projected_graph(bg, bottom_nodes, ratio=True)
+g_t_w = bp.weighted_projected_graph(bg, top_nodes, ratio=True)
+```
+## plot two-mode networks network
+```{python}
+# Create the figure and specify the size
+plt.figure(figsize=(12, 12))
+
+# Draw the network
+edges = g_t_w.edges(data=True)
+weights = [w["weight"] for u, v, w in edges]
+vmin = min(weights)
+vmax = max(weights)
+
+pos = nx.kamada_kawai_layout(g_t_w)
+nx.draw(
+    g_t_w,
+    pos,
+    with_labels=False,
+    node_color="lightgreen",
+    node_size=30,
+    edge_color=weights,
+    edge_cmap=plt.cm.Reds,
+    edge_vmin=vmin,
+    edge_vmax=vmax,
+)
+
+# Add text annotation if needed
+plt.text(1, 1, "A", fontsize=12, ha="center")
+
+# Show plot
+plt.show()
+```
+# Create Z matrix
+## create X matrix and Z matrix
+```{python}
+user_genre_matrix = pr.pivot_table(index='user_id', columns='genres', aggfunc=lambda x: 1, fill_value=0)
+
+# calculate genre-genre matrix Z
+Z = np.dot(user_genre_matrix.T, user_genre_matrix)
+# print(Z)
+
+# change ndarray Z to DataFrame
+Z_df = pd.DataFrame(Z, index=user_genre_matrix.columns, columns=user_genre_matrix.columns)
+
+Z_df
+```
+# Community Detection
+## Visualize the network
+```{python}
+# fix node positions for better visualization
+pos = nx.spring_layout(g_t_w, seed=123)
+# draw the network
+nx.draw(
+    g_t_w, pos, with_labels=True, node_color="lightgray", node_size=300, edge_color="gray"
+)
+```
+## Community detection using Girvan-Newman’s algorithm
+```{python}
+# edge betweenness centrality
+edge_betweenness = nx.edge_betweenness_centrality(g_t_w)
+# set the value min and max make color lookable
+vmin = min(edge_betweenness.values())
+vmax = max(edge_betweenness.values())
+# network visualization
+pos = nx.kamada_kawai_layout(g_t_w)
+plt.figure(figsize=(12, 12))
+nx.draw(
+    g_t_w,
+    pos,
+    with_labels=True,
+    node_color="lightgray",
+    node_size=300,
+    edgelist=edge_betweenness.keys(),
+    edge_color=list(edge_betweenness.values()),
+    edge_cmap=plt.cm.Reds,
+    edge_vmin=vmin,
+    edge_vmax=vmax,
+)
+
+```
+
+## Community detection using Louvaine’s algorithm (Z matrix)
+### Change Z matrix to Graph
+```{python}
+g_z_matrix = nx.Graph()
+
+# add node
+for node in Z_df.columns:
+    g_z_matrix.add_node(node)
+
+# add edges
+for i in Z_df.columns:
+    for j in Z_df.columns:
+        if i != j and Z_df.loc[i, j] > 0:
+            g_z_matrix.add_edge(i, j, weight=Z_df.loc[i, j])
+
+```
+### Fit the Louvain algorithm to the weighted network
+```{python}
+# fit the Louvain algorithm to the weighted network
+fit = nx.community.louvain_communities(g_z_matrix, weight="weight")
+# retrieve the communities
+communities = tuple(sorted(c) for c in fit)
+# visualize the network with the identified communities
+colors = [
+    (
+        "plum" if node in communities[0]
+        else "lightgreen" if node in communities[1]
+        else "lightblue"
+    )
+    for node in g_z_matrix.nodes
+]
+# visualize the network
+pos = nx.kamada_kawai_layout(g_z_matrix)
+plt.figure(figsize=(12, 12))
+nx.draw(
+    g_z_matrix,
+    pos,
+    with_labels=True,
+    node_color=colors,
+    node_size=300,
+    edge_color=[g_z_matrix[u][v]["weight"] for u, v in g_z_matrix.edges],
+    edge_cmap=plt.cm.Greens,
+    #alpha=0.5,
+)
+```
+
+# Weighted Stochastic Blockmodeling (WSBM)
+## Change NetworkX graph into graph-tool graph
+```{python}
+# create graph-tool's graph
+g_z_matrix_WSBM = Graph(directed=False)
+
+# add node
+vprops = g_z_matrix_WSBM.new_vertex_property("string")
+vertices = {}
+for node in g_z_matrix.nodes:
+    v = g_z_matrix_WSBM.add_vertex()
+    vertices[node] = v
+    vprops[v] = node
+
+g_z_matrix_WSBM.vp["name"] = vprops
+
+# add edge
+eweights = g_z_matrix_WSBM.new_edge_property("float")
+for u, v, data in g_z_matrix.edges(data=True):
+    edge = g_z_matrix_WSBM.add_edge(vertices[u], vertices[v])
+    eweights[edge] = data["weight"]
+
+g_z_matrix_WSBM.ep["weight"] = eweights  # add weight to graph
+
+```
+
+## Inferring the Modular Structure of Networks with Weighted Stochastic Blockmodeling
+```{python}
+# set random seed
+seed = 41
+random.seed(seed)
+np.random.seed(seed)
+graph_tool.all.seed_rng(seed)
+
+# model fit
+state = minimize_nested_blockmodel_dl(
+    g_z_matrix_WSBM, state_args=dict(recs=[g_z_matrix_WSBM.ep.weight], rec_types=["real-exponential"])
+)
+# improve solution with merge-split
+for i in range(100):
+    ret = state.multiflip_mcmc_sweep(niter=10, beta=np.inf)
+state.draw(
+    edge_color=prop_to_size(g_z_matrix_WSBM.ep.weight, power=1, log=True),
+    ecmap=(matplotlib.cm.inferno, 0.6),
+    eorder=g_z_matrix_WSBM.ep.weight,
+    edge_pen_width=prop_to_size(g_z_matrix_WSBM.ep.weight, 1, 4, power=1, log=True),
+    edge_gradient=[],
+    output_size=(800, 800),
+    output="genre-wsbm.png",
+)
+# show the plot
+#Image(filename="genre-wsbm.png")
+img = matplotlib.image.imread('genre-wsbm.png')
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+```
+
+## Getting a Multi-Level Community Classification
+```{python}
+levels = state.get_bs()
+
+level_communities = []
+
+for level_idx, level in enumerate(levels):
+    community_mapping = {}
+    for v_idx, community_id in enumerate(level):
+        if community_id not in community_mapping:
+            community_mapping[community_id] = []
+        community_mapping[community_id].append(g_z_matrix_WSBM.vp["name"][v_idx])
+    
+    level_communities.append(community_mapping)
+    print(f"Level {level_idx} Communities:")
+    for community_id, nodes in community_mapping.items():
+        print(f"  Community {community_id}: {nodes}")
+
+```
+
+## Visualisation of WSBM 
+```{python}
+# choose level
+selected_level = 0
+
+level_blocks = levels[selected_level]
+
+# color
+g_z_matrix_WSBM.vp["color"] = g_z_matrix_WSBM.new_vp("vector<double>")
+color_map = {community_id: [np.random.rand(), np.random.rand(), np.random.rand()] for community_id in set(level_blocks)}
+for v in g_z_matrix_WSBM.vertices():
+    g_z_matrix_WSBM.vp["color"][v] = color_map[level_blocks[int(v)]]
+
+# draw
+graph_draw(
+    g_z_matrix_WSBM,
+    vertex_fill_color=g_z_matrix_WSBM.vp["color"],
+    edge_color=prop_to_size(g_z_matrix_WSBM.ep.weight, power=1, log=True),
+    output_size=(800, 800),
+    output="level_0_visualization.png",
+)
+#Image(filename="level_0_visualization.png")
+img = matplotlib.image.imread('level_0_visualization.png')
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+```
+
+# Genres similarity network
+## Building Genres similarity Networks
+### calculate node_degree, clustering_coefficent
+```{python}
+g = nx.from_pandas_edgelist(fr, source="node_1", target="node_2")
+nx.is_directed(g)
+nx.is_weighted(g)
+```
+
+```{python}
+# node degree
+g_node_degree = nx.degree(g)
+g_degree_dict = dict(g_node_degree)
+# clustering coefficent
+g_clustering = nx.clustering(g)
+```
+
+```{python}
+node_metrics = pd.DataFrame({
+    'user_id': list(g_degree_dict.keys()),
+    'node_degree': list(g_degree_dict.values()),
+    'clustering_coefficient': [g_clustering[user_id] for user_id in g_degree_dict.keys()]
+})
+pr_new = pr
+pr_new['user_id'] = pd.to_numeric(pr_new['user_id'], errors='coerce')
+
+combined_data = pr_new.merge(node_metrics, on='user_id', how='left')
+
+genres_attribute_data = combined_data.groupby('genres', as_index=False).agg(
+    avg_node_degree=('node_degree', 'mean'),
+    avg_clustering_coefficient=('clustering_coefficient', 'mean')
+)
+```
+
+### load data from python
+```{r}
+fr_r <- py$fr
+pr_r <- py$pr
+# Z matrix
+Z_df <- py$Z_df
+genres_attribute_data_r <- py$genres_attribute_data
+```
+
+### create network from Z matrix
+```{r}
+Z_matrix <- as.matrix(Z_df)
+```
+
+```{r}
+attribute_list <- do.call(list, genres_attribute_data_r)
+```
+
+```{r}
+genres_net <- network(
+        x = Z_matrix, directed = FALSE,
+        vertex.attr = attribute_list
+)
+```
+
+```{r}
+genres_net
+```
+
+## Network visualization
+```{r}
+plot(genres_net)
+```
+## Descriptive statistics
+### density
+```{r}
+gden(genres_net)
+```
+
+### cug test
+```{r}
+cug.test(
+        dat = genres_net, FUN = "gden", cmode = "size"
+)
+```
+
+### reciprocity
+```{r}
+grecip(genres_net, measure = "dyadic.nonnull")
+```
+
+```{r}
+cug.test(
+        dat = genres_net, FUN = "grecip",
+        FUN.args = list(measure = "dyadic.nonnull"), cmode = "edges"
+)
+```
+## ERGM estimation
+### Simple 'edge' model
+```{r}
+mod_rand <- ergm(formula = genres_net ~ edges)
+summary(mod_rand)
+```
+### Edges & node attributes
+```{r}
+mod_homoph1 <- ergm(genres_net ~ edges + 
+        absdiff("avg_node_degree") +
+        absdiff("avg_clustering_coefficient")
+)
+summary(mod_homoph1)
+```
+
+```{r}
+mod_homoph2 <- ergm(genres_net ~ edges + 
+        absdiff("avg_node_degree") +
+        absdiff("avg_clustering_coefficient") +
+        nodecov("avg_node_degree") +
+        nodecov("avg_clustering_coefficient"))
+summary(mod_homoph2)
+```
+
+

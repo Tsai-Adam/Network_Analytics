@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yueh-Lin Tsai">
+<meta name="dcterms.date" content="2024-12-11">
+
+<title>Final Course Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/quarto.js"></script>
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/popper.min.js"></script>
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Yueh-Lin_Tsai_SMM638_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Yueh-Lin_Tsai_SMM638_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Yueh-Lin_Tsai_SMM638_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Yueh-Lin_Tsai_SMM638_files/libs/bootstrap/bootstrap-3119dc400b02922c27171a4b76b1a7ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#import-libraries" id="toc-import-libraries" class="nav-link active" data-scroll-target="#import-libraries"><span class="header-section-number">1</span> Import libraries</a>
+  <ul class="collapse">
+  <li><a href="#r-library" id="toc-r-library" class="nav-link" data-scroll-target="#r-library"><span class="header-section-number">1.1</span> R library</a></li>
+  <li><a href="#python-library" id="toc-python-library" class="nav-link" data-scroll-target="#python-library"><span class="header-section-number">1.2</span> Python library</a></li>
+  </ul></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">2</span> Load data</a>
+  <ul class="collapse">
+  <li><a href="#hr_edges.csv" id="toc-hr_edges.csv" class="nav-link" data-scroll-target="#hr_edges.csv"><span class="header-section-number">2.1</span> HR_edges.csv</a></li>
+  <li><a href="#hr_genres.json" id="toc-hr_genres.json" class="nav-link" data-scroll-target="#hr_genres.json"><span class="header-section-number">2.2</span> HR_genres.json</a></li>
+  </ul></li>
+  <li><a href="#two-mode-bipartite-networks" id="toc-two-mode-bipartite-networks" class="nav-link" data-scroll-target="#two-mode-bipartite-networks"><span class="header-section-number">3</span> two-mode (Bipartite) networks</a>
+  <ul class="collapse">
+  <li><a href="#data-botton_nodes-top_nodes-edges" id="toc-data-botton_nodes-top_nodes-edges" class="nav-link" data-scroll-target="#data-botton_nodes-top_nodes-edges"><span class="header-section-number">3.1</span> data botton_nodes top_nodes edges</a></li>
+  <li><a href="#graph-creation" id="toc-graph-creation" class="nav-link" data-scroll-target="#graph-creation"><span class="header-section-number">3.2</span> Graph creation</a></li>
+  <li><a href="#weighted-projections-of-the-two-mode-networks" id="toc-weighted-projections-of-the-two-mode-networks" class="nav-link" data-scroll-target="#weighted-projections-of-the-two-mode-networks"><span class="header-section-number">3.3</span> Weighted projections of the two-mode networks</a></li>
+  <li><a href="#plot-two-mode-networks-network" id="toc-plot-two-mode-networks-network" class="nav-link" data-scroll-target="#plot-two-mode-networks-network"><span class="header-section-number">3.4</span> plot two-mode networks network</a></li>
+  </ul></li>
+  <li><a href="#create-z-matrix" id="toc-create-z-matrix" class="nav-link" data-scroll-target="#create-z-matrix"><span class="header-section-number">4</span> Create Z matrix</a>
+  <ul class="collapse">
+  <li><a href="#create-x-matrix-and-z-matrix" id="toc-create-x-matrix-and-z-matrix" class="nav-link" data-scroll-target="#create-x-matrix-and-z-matrix"><span class="header-section-number">4.1</span> create X matrix and Z matrix</a></li>
+  </ul></li>
+  <li><a href="#community-detection" id="toc-community-detection" class="nav-link" data-scroll-target="#community-detection"><span class="header-section-number">5</span> Community Detection</a>
+  <ul class="collapse">
+  <li><a href="#visualize-the-network" id="toc-visualize-the-network" class="nav-link" data-scroll-target="#visualize-the-network"><span class="header-section-number">5.1</span> Visualize the network</a></li>
+  <li><a href="#community-detection-using-girvan-newmans-algorithm" id="toc-community-detection-using-girvan-newmans-algorithm" class="nav-link" data-scroll-target="#community-detection-using-girvan-newmans-algorithm"><span class="header-section-number">5.2</span> Community detection using Girvan-Newman’s algorithm</a></li>
+  <li><a href="#community-detection-using-louvaines-algorithm-z-matrix" id="toc-community-detection-using-louvaines-algorithm-z-matrix" class="nav-link" data-scroll-target="#community-detection-using-louvaines-algorithm-z-matrix"><span class="header-section-number">5.3</span> Community detection using Louvaine’s algorithm (Z matrix)</a></li>
+  </ul></li>
+  <li><a href="#weighted-stochastic-blockmodeling-wsbm" id="toc-weighted-stochastic-blockmodeling-wsbm" class="nav-link" data-scroll-target="#weighted-stochastic-blockmodeling-wsbm"><span class="header-section-number">6</span> Weighted Stochastic Blockmodeling (WSBM)</a>
+  <ul class="collapse">
+  <li><a href="#change-networkx-graph-into-graph-tool-graph" id="toc-change-networkx-graph-into-graph-tool-graph" class="nav-link" data-scroll-target="#change-networkx-graph-into-graph-tool-graph"><span class="header-section-number">6.1</span> Change NetworkX graph into graph-tool graph</a></li>
+  <li><a href="#inferring-the-modular-structure-of-networks-with-weighted-stochastic-blockmodeling" id="toc-inferring-the-modular-structure-of-networks-with-weighted-stochastic-blockmodeling" class="nav-link" data-scroll-target="#inferring-the-modular-structure-of-networks-with-weighted-stochastic-blockmodeling"><span class="header-section-number">6.2</span> Inferring the Modular Structure of Networks with Weighted Stochastic Blockmodeling</a></li>
+  <li><a href="#getting-a-multi-level-community-classification" id="toc-getting-a-multi-level-community-classification" class="nav-link" data-scroll-target="#getting-a-multi-level-community-classification"><span class="header-section-number">6.3</span> Getting a Multi-Level Community Classification</a></li>
+  <li><a href="#visualisation-of-wsbm" id="toc-visualisation-of-wsbm" class="nav-link" data-scroll-target="#visualisation-of-wsbm"><span class="header-section-number">6.4</span> Visualisation of WSBM</a></li>
+  </ul></li>
+  <li><a href="#genres-similarity-network" id="toc-genres-similarity-network" class="nav-link" data-scroll-target="#genres-similarity-network"><span class="header-section-number">7</span> Genres similarity network</a>
+  <ul class="collapse">
+  <li><a href="#building-genres-similarity-networks" id="toc-building-genres-similarity-networks" class="nav-link" data-scroll-target="#building-genres-similarity-networks"><span class="header-section-number">7.1</span> Building Genres similarity Networks</a></li>
+  <li><a href="#network-visualization" id="toc-network-visualization" class="nav-link" data-scroll-target="#network-visualization"><span class="header-section-number">7.2</span> Network visualization</a></li>
+  <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics"><span class="header-section-number">7.3</span> Descriptive statistics</a></li>
+  <li><a href="#ergm-estimation" id="toc-ergm-estimation" class="nav-link" data-scroll-target="#ergm-estimation"><span class="header-section-number">7.4</span> ERGM estimation</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../Yueh-Lin_Tsai_SMM638.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="Yueh-Lin_Tsai_SMM638.ipynb" download="Yueh-Lin_Tsai_SMM638.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li><li><a href="Yueh-Lin_Tsai_SMM638.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Final Course Project</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Yueh-Lin Tsai </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 11, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Overview</div>
+    This is Final Course Project
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="import-libraries" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Import libraries</h1>
+<section id="r-library" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="r-library"><span class="header-section-number">1.1</span> R library</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#use_condaenv("smm638", required = TRUE)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sna)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ergm)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="python-library" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="python-library"><span class="header-section-number">1.2</span> Python library</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> networkx.algorithms <span class="im">import</span> bipartite <span class="im">as</span> bp</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> graph_tool.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="load-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Load data</h1>
+<section id="hr_edges.csv" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="hr_edges.csv"><span class="header-section-number">2.1</span> HR_edges.csv</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fr <span class="op">=</span> pd.read_csv(<span class="st">'/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_edges.csv'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># data preview</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fr.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   node_1  node_2
+0       0    4076
+1       0   29861
+2       0   53717
+3       0   23820
+4       0   39945</code></pre>
+</div>
+</div>
+</section>
+<section id="hr_genres.json" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="hr_genres.json"><span class="header-section-number">2.2</span> HR_genres.json</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_genres.json'</span>, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    pr_json <span class="op">=</span> json.load(f)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pr_json[<span class="st">"11542"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Indie Rock', 'Indie Pop/Folk', 'International Pop', 'Rap/Hip Hop', 'Pop', 'Rock', 'Indie Pop', 'Alternative']</code></pre>
+</div>
+</div>
+<section id="convert-the-dictionary-into-a-pandas" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="convert-the-dictionary-into-a-pandas"><span class="header-section-number">2.2.1</span> Convert the dictionary into a Pandas</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pr <span class="op">=</span> pd.json_normalize(pr_json).T</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pr.rename({<span class="dv">0</span>: <span class="st">'genres'</span>}, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pr.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                  genres
+13357                                              [Pop]
+11542  [Indie Rock, Indie Pop/Folk, International Pop...
+11543                                 [Dance, Pop, Rock]
+11540                     [International Pop, Jazz, Pop]
+11541                                      [Rap/Hip Hop]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pr_original <span class="op">=</span> pr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="separate-rows" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="separate-rows"><span class="header-section-number">2.2.2</span> Separate rows</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pr <span class="op">=</span> pr.explode(<span class="st">'genres'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pr.reset_index(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>pr.rename({<span class="st">'index'</span>: <span class="st">'user_id'</span>}, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>pr.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  user_id             genres
+0   13357                Pop
+1   11542         Indie Rock
+2   11542     Indie Pop/Folk
+3   11542  International Pop
+4   11542        Rap/Hip Hop</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="two-mode-bipartite-networks" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> two-mode (Bipartite) networks</h1>
+<section id="data-botton_nodes-top_nodes-edges" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-botton_nodes-top_nodes-edges"><span class="header-section-number">3.1</span> data botton_nodes top_nodes edges</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bottom_nodes <span class="op">=</span> pr[<span class="st">"user_id"</span>].drop_duplicates().reset_index(drop<span class="op">=</span><span class="va">True</span>).to_numpy()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>top_nodes <span class="op">=</span> pr[<span class="st">"genres"</span>].drop_duplicates().reset_index(drop<span class="op">=</span><span class="va">True</span>).to_numpy()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> pr[[<span class="st">'user_id'</span>, <span class="st">'genres'</span>]].values.tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="graph-creation" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="graph-creation"><span class="header-section-number">3.2</span> Graph creation</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># empty graph</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>bg <span class="op">=</span> nx.Graph()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># add nodes</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>bg.add_nodes_from(bottom_nodes, bipartite<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>bg.add_nodes_from(top_nodes, bipartite<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get nx object</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>bg.add_edges_from(edges)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># `is bipartite` check</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>is_bip <span class="op">=</span> nx.is_bipartite(bg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="weighted-projections-of-the-two-mode-networks" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="weighted-projections-of-the-two-mode-networks"><span class="header-section-number">3.3</span> Weighted projections of the two-mode networks</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#g_b_w = bp.weighted_projected_graph(bg, bottom_nodes, ratio=True)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>g_t_w <span class="op">=</span> bp.weighted_projected_graph(bg, top_nodes, ratio<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="plot-two-mode-networks-network" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="plot-two-mode-networks-network"><span class="header-section-number">3.4</span> plot two-mode networks network</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure and specify the size</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the network</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> g_t_w.edges(data<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [w[<span class="st">"weight"</span>] <span class="cf">for</span> u, v, w <span class="kw">in</span> edges]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>vmin <span class="op">=</span> <span class="bu">min</span>(weights)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>vmax <span class="op">=</span> <span class="bu">max</span>(weights)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_t_w)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    g_t_w,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span><span class="st">"lightgreen"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>weights,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Reds,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    edge_vmin<span class="op">=</span>vmin,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    edge_vmax<span class="op">=</span>vmax,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Add text annotation if needed</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="dv">1</span>, <span class="dv">1</span>, <span class="st">"A"</span>, fontsize<span class="op">=</span><span class="dv">12</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="create-z-matrix" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Create Z matrix</h1>
+<section id="create-x-matrix-and-z-matrix" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="create-x-matrix-and-z-matrix"><span class="header-section-number">4.1</span> create X matrix and Z matrix</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>user_genre_matrix <span class="op">=</span> pr.pivot_table(index<span class="op">=</span><span class="st">'user_id'</span>, columns<span class="op">=</span><span class="st">'genres'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: <span class="dv">1</span>, fill_value<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate genre-genre matrix Z</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> np.dot(user_genre_matrix.T, user_genre_matrix)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print(Z)</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># change ndarray Z to DataFrame</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>Z_df <span class="op">=</span> pd.DataFrame(Z, index<span class="op">=</span>user_genre_matrix.columns, columns<span class="op">=</span>user_genre_matrix.columns)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>Z_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>genres               Acoustic Blues  African Music  ...  Vocal jazz  West Coast
+genres                                              ...                        
+Acoustic Blues                   14              2  ...           4           0
+African Music                     2            107  ...           9           2
+Alternative                      12             80  ...         313          72
+Alternative Country               2              1  ...          14           0
+Asian Music                       0              3  ...           4           2
+...                             ...            ...  ...         ...         ...
+Trance                            0              8  ...           9           7
+Tropical                          0              3  ...           3           0
+Urban Cowboy                      0              3  ...           7           1
+Vocal jazz                        4              9  ...         374           0
+West Coast                        0              2  ...           0         107
+
+[84 rows x 84 columns]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="community-detection" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Community Detection</h1>
+<section id="visualize-the-network" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="visualize-the-network"><span class="header-section-number">5.1</span> Visualize the network</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fix node positions for better visualization</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.spring_layout(g_t_w, seed<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># draw the network</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    g_t_w, pos, with_labels<span class="op">=</span><span class="va">True</span>, node_color<span class="op">=</span><span class="st">"lightgray"</span>, node_size<span class="op">=</span><span class="dv">300</span>, edge_color<span class="op">=</span><span class="st">"gray"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="community-detection-using-girvan-newmans-algorithm" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="community-detection-using-girvan-newmans-algorithm"><span class="header-section-number">5.2</span> Community detection using Girvan-Newman’s algorithm</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># edge betweenness centrality</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>edge_betweenness <span class="op">=</span> nx.edge_betweenness_centrality(g_t_w)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set the value min and max make color lookable</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>vmin <span class="op">=</span> <span class="bu">min</span>(edge_betweenness.values())</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>vmax <span class="op">=</span> <span class="bu">max</span>(edge_betweenness.values())</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># network visualization</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_t_w)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    g_t_w,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span><span class="st">"lightgray"</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    edgelist<span class="op">=</span>edge_betweenness.keys(),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span><span class="bu">list</span>(edge_betweenness.values()),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Reds,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    edge_vmin<span class="op">=</span>vmin,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    edge_vmax<span class="op">=</span>vmax,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-13-5.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="community-detection-using-louvaines-algorithm-z-matrix" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="community-detection-using-louvaines-algorithm-z-matrix"><span class="header-section-number">5.3</span> Community detection using Louvaine’s algorithm (Z matrix)</h2>
+<section id="change-z-matrix-to-graph" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="change-z-matrix-to-graph"><span class="header-section-number">5.3.1</span> Change Z matrix to Graph</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>g_z_matrix <span class="op">=</span> nx.Graph()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># add node</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> node <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    g_z_matrix.add_node(node)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># add edges</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">!=</span> j <span class="kw">and</span> Z_df.loc[i, j] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            g_z_matrix.add_edge(i, j, weight<span class="op">=</span>Z_df.loc[i, j])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="fit-the-louvain-algorithm-to-the-weighted-network" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="fit-the-louvain-algorithm-to-the-weighted-network"><span class="header-section-number">5.3.2</span> Fit the Louvain algorithm to the weighted network</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the Louvain algorithm to the weighted network</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> nx.community.louvain_communities(g_z_matrix, weight<span class="op">=</span><span class="st">"weight"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># retrieve the communities</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>communities <span class="op">=</span> <span class="bu">tuple</span>(<span class="bu">sorted</span>(c) <span class="cf">for</span> c <span class="kw">in</span> fit)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the network with the identified communities</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"plum"</span> <span class="cf">if</span> node <span class="kw">in</span> communities[<span class="dv">0</span>]</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> <span class="st">"lightgreen"</span> <span class="cf">if</span> node <span class="kw">in</span> communities[<span class="dv">1</span>]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> <span class="st">"lightblue"</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node <span class="kw">in</span> g_z_matrix.nodes</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the network</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_z_matrix)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    g_z_matrix,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span>colors,</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>[g_z_matrix[u][v][<span class="st">"weight"</span>] <span class="cf">for</span> u, v <span class="kw">in</span> g_z_matrix.edges],</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Greens,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#alpha=0.5,</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-15-7.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="weighted-stochastic-blockmodeling-wsbm" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Weighted Stochastic Blockmodeling (WSBM)</h1>
+<section id="change-networkx-graph-into-graph-tool-graph" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="change-networkx-graph-into-graph-tool-graph"><span class="header-section-number">6.1</span> Change NetworkX graph into graph-tool graph</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create graph-tool's graph</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM <span class="op">=</span> Graph(directed<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add node</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>vprops <span class="op">=</span> g_z_matrix_WSBM.new_vertex_property(<span class="st">"string"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>vertices <span class="op">=</span> {}</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> node <span class="kw">in</span> g_z_matrix.nodes:</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> g_z_matrix_WSBM.add_vertex()</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    vertices[node] <span class="op">=</span> v</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    vprops[v] <span class="op">=</span> node</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.vp[<span class="st">"name"</span>] <span class="op">=</span> vprops</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># add edge</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>eweights <span class="op">=</span> g_z_matrix_WSBM.new_edge_property(<span class="st">"float"</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u, v, data <span class="kw">in</span> g_z_matrix.edges(data<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    edge <span class="op">=</span> g_z_matrix_WSBM.add_edge(vertices[u], vertices[v])</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    eweights[edge] <span class="op">=</span> data[<span class="st">"weight"</span>]</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.ep[<span class="st">"weight"</span>] <span class="op">=</span> eweights  <span class="co"># add weight to graph</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="inferring-the-modular-structure-of-networks-with-weighted-stochastic-blockmodeling" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="inferring-the-modular-structure-of-networks-with-weighted-stochastic-blockmodeling"><span class="header-section-number">6.2</span> Inferring the Modular Structure of Networks with Weighted Stochastic Blockmodeling</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set random seed</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">41</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>graph_tool.<span class="bu">all</span>.seed_rng(seed)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># model fit</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> minimize_nested_blockmodel_dl(</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM, state_args<span class="op">=</span><span class="bu">dict</span>(recs<span class="op">=</span>[g_z_matrix_WSBM.ep.weight], rec_types<span class="op">=</span>[<span class="st">"real-exponential"</span>])</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># improve solution with merge-split</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> state.multiflip_mcmc_sweep(niter<span class="op">=</span><span class="dv">10</span>, beta<span class="op">=</span>np.inf)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>state.draw(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    ecmap<span class="op">=</span>(matplotlib.cm.inferno, <span class="fl">0.6</span>),</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    eorder<span class="op">=</span>g_z_matrix_WSBM.ep.weight,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    edge_pen_width<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, <span class="dv">1</span>, <span class="dv">4</span>, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    edge_gradient<span class="op">=</span>[],</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    output_size<span class="op">=</span>(<span class="dv">800</span>, <span class="dv">800</span>),</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"genre-wsbm.png"</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(&lt;VertexPropertyMap object with value type 'vector&lt;double&gt;', for Graph 0x31d729d60, at 0x3117e3cb0&gt;, &lt;GraphView object, directed, with 97 vertices and 96 edges, edges filtered by (&lt;EdgePropertyMap object with value type 'bool', for Graph 0x308131700, at 0x308144a40&gt;, False), vertices filtered by (&lt;VertexPropertyMap object with value type 'bool', for Graph 0x308131700, at 0x31178daf0&gt;, False), at 0x308131700&gt;, &lt;VertexPropertyMap object with value type 'vector&lt;double&gt;', for Graph 0x308131700, at 0x308167140&gt;)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the plot</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Image(filename="genre-wsbm.png")</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> matplotlib.image.imread(<span class="st">'genre-wsbm.png'</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(-0.5, 799.5, 798.5, -0.5)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-17-9.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="getting-a-multi-level-community-classification" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="getting-a-multi-level-community-classification"><span class="header-section-number">6.3</span> Getting a Multi-Level Community Classification</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>levels <span class="op">=</span> state.get_bs()</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>level_communities <span class="op">=</span> []</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> level_idx, level <span class="kw">in</span> <span class="bu">enumerate</span>(levels):</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    community_mapping <span class="op">=</span> {}</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_idx, community_id <span class="kw">in</span> <span class="bu">enumerate</span>(level):</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> community_id <span class="kw">not</span> <span class="kw">in</span> community_mapping:</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>            community_mapping[community_id] <span class="op">=</span> []</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        community_mapping[community_id].append(g_z_matrix_WSBM.vp[<span class="st">"name"</span>][v_idx])</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    level_communities.append(community_mapping)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Level </span><span class="sc">{</span>level_idx<span class="sc">}</span><span class="ss"> Communities:"</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, nodes <span class="kw">in</span> community_mapping.items():</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  Community </span><span class="sc">{</span>community_id<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>nodes<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Level 0 Communities:
+  Community 61: ['Acoustic Blues', 'Baroque', 'Bluegrass', 'Bollywood', 'Country Blues', 'Indian Music', 'Modern', 'Nursery Rhymes', 'Tropical']
+  Community 46: ['African Music', 'Alternative Country', 'Bolero', 'Chicago Blues', 'Dub', 'Electric Blues', 'Electro Hip Hop', 'Game Scores', 'Grime', 'Jazz Hip Hop', 'Old School', 'Oldschool R&amp;B', 'Opera', 'Ska', 'Sports', 'Urban Cowboy', 'West Coast']
+  Community 70: ['Alternative', 'Contemporary R&amp;B', 'Dance', 'Electro', 'Film Scores', 'Films/Games', 'Indie Pop', 'Indie Pop/Folk', 'Indie Rock', 'International Pop', 'Pop', 'R&amp;B', 'Rap/Hip Hop', 'Rock', 'Singer &amp; Songwriter', 'Techno/House']
+  Community 21: ['Asian Music', 'Brazilian Music', 'Chill Out/Trip-Hop/Lounge', 'Comedy', 'Dancehall/Ragga', 'Dirty South', 'Dubstep', 'Electro Pop/Electro Rock', 'Instrumental jazz', 'Musicals', 'Old school soul', 'Soundtracks', 'Spirituality &amp; Religion', 'TV Soundtracks', 'Trance', 'Vocal jazz']
+  Community 31: ['Blues', 'Classical', 'Contemporary Soul', 'Country', 'Dancefloor', 'Disco', 'East Coast', 'Folk', 'Hard Rock', 'Indie Rock/Rock pop', 'Jazz', 'Kids', 'Latin Music', 'Metal', 'Reggae', 'Rock &amp; Roll/Rockabilly', 'Soul &amp; Funk']
+  Community 0: ['Classic Blues', 'Classical Period', 'Delta Blues', 'Early Music', 'Kids &amp; Family', 'Ranchera', 'Romantic', 'TV shows &amp; movies', 'Traditional Country']
+Level 1 Communities:
+  Community 2: ['Acoustic Blues', 'Baroque', 'Classic Blues', 'Classical', 'Contemporary Soul', 'Hard Rock', 'Indian Music', 'Indie Rock', 'Musicals', 'Nursery Rhymes', 'Opera', 'Pop', 'Rock', 'Singer &amp; Songwriter', 'Soundtracks', 'TV Soundtracks', 'TV shows &amp; movies', 'Tropical']
+  Community 0: ['African Music', 'Alternative', 'Alternative Country', 'Asian Music', 'Bluegrass', 'Bolero', 'Bollywood', 'Brazilian Music', 'Chicago Blues', 'Comedy', 'Contemporary R&amp;B', 'Country Blues', 'Dancefloor', 'Dancehall/Ragga', 'Delta Blues', 'Dirty South', 'Disco', 'Dub', 'East Coast', 'Electric Blues', 'Electro', 'Electro Hip Hop', 'Electro Pop/Electro Rock', 'Film Scores', 'Films/Games', 'Folk', 'Grime', 'Indie Pop', 'Indie Pop/Folk', 'Indie Rock/Rock pop', 'International Pop', 'Jazz Hip Hop', 'Kids', 'Kids &amp; Family', 'Latin Music', 'Metal', 'Old school soul', 'Oldschool R&amp;B', 'R&amp;B', 'Ranchera', 'Rap/Hip Hop', 'Reggae', 'Rock &amp; Roll/Rockabilly', 'Ska', 'Spirituality &amp; Religion', 'Sports', 'Techno/House', 'Traditional Country', 'Trance', 'West Coast']
+  Community 3: ['Blues', 'Chill Out/Trip-Hop/Lounge', 'Country', 'Dance', 'Soul &amp; Funk', 'Urban Cowboy', 'Vocal jazz']
+  Community 6: ['Classical Period']
+  Community 4: ['Dubstep', 'Early Music', 'Game Scores', 'Instrumental jazz', 'Jazz', 'Modern', 'Old School', 'Romantic']
+Level 2 Communities:
+  Community 2: ['Acoustic Blues', 'Baroque']
+  Community 3: ['African Music']
+  Community 0: ['Alternative', 'Alternative Country', 'Asian Music']
+  Community 1: ['Bluegrass']
+Level 3 Communities:
+  Community 0: ['Acoustic Blues', 'Alternative', 'Asian Music']
+  Community 1: ['African Music', 'Alternative Country']
+Level 4 Communities:
+  Community 0: ['Acoustic Blues', 'African Music']
+  Community 1: ['Alternative']
+Level 5 Communities:
+  Community 0: ['Acoustic Blues']
+  Community 1: ['African Music']
+Level 6 Communities:
+  Community 0: ['Acoustic Blues', 'African Music']
+Level 7 Communities:
+  Community 0: ['Acoustic Blues']
+  Community 1: ['African Music']</code></pre>
+</div>
+</div>
+</section>
+<section id="visualisation-of-wsbm" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="visualisation-of-wsbm"><span class="header-section-number">6.4</span> Visualisation of WSBM</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># choose level</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>selected_level <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>level_blocks <span class="op">=</span> levels[selected_level]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># color</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.vp[<span class="st">"color"</span>] <span class="op">=</span> g_z_matrix_WSBM.new_vp(<span class="st">"vector&lt;double&gt;"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>color_map <span class="op">=</span> {community_id: [np.random.rand(), np.random.rand(), np.random.rand()] <span class="cf">for</span> community_id <span class="kw">in</span> <span class="bu">set</span>(level_blocks)}</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> g_z_matrix_WSBM.vertices():</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM.vp[<span class="st">"color"</span>][v] <span class="op">=</span> color_map[level_blocks[<span class="bu">int</span>(v)]]</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># draw</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>graph_draw(</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM,</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    vertex_fill_color<span class="op">=</span>g_z_matrix_WSBM.vp[<span class="st">"color"</span>],</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    output_size<span class="op">=</span>(<span class="dv">800</span>, <span class="dv">800</span>),</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"level_0_visualization.png"</span>,</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;VertexPropertyMap object with value type 'vector&lt;double&gt;', for Graph 0x31d729d60, at 0x3081dadb0&gt;</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Image(filename="level_0_visualization.png")</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> matplotlib.image.imread(<span class="st">'level_0_visualization.png'</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(-0.5, 720.5, 799.5, -0.5)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-19-11.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="genres-similarity-network" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Genres similarity network</h1>
+<section id="building-genres-similarity-networks" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="building-genres-similarity-networks"><span class="header-section-number">7.1</span> Building Genres similarity Networks</h2>
+<section id="calculate-node_degree-clustering_coefficent" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="calculate-node_degree-clustering_coefficent"><span class="header-section-number">7.1.1</span> calculate node_degree, clustering_coefficent</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> nx.from_pandas_edgelist(fr, source<span class="op">=</span><span class="st">"node_1"</span>, target<span class="op">=</span><span class="st">"node_2"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>nx.is_directed(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>False</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nx.is_weighted(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>False</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># node degree</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>g_node_degree <span class="op">=</span> nx.degree(g)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>g_degree_dict <span class="op">=</span> <span class="bu">dict</span>(g_node_degree)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># clustering coefficent</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>g_clustering <span class="op">=</span> nx.clustering(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>node_metrics <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'user_id'</span>: <span class="bu">list</span>(g_degree_dict.keys()),</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'node_degree'</span>: <span class="bu">list</span>(g_degree_dict.values()),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'clustering_coefficient'</span>: [g_clustering[user_id] <span class="cf">for</span> user_id <span class="kw">in</span> g_degree_dict.keys()]</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>pr_new <span class="op">=</span> pr</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>pr_new[<span class="st">'user_id'</span>] <span class="op">=</span> pd.to_numeric(pr_new[<span class="st">'user_id'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>combined_data <span class="op">=</span> pr_new.merge(node_metrics, on<span class="op">=</span><span class="st">'user_id'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>genres_attribute_data <span class="op">=</span> combined_data.groupby(<span class="st">'genres'</span>, as_index<span class="op">=</span><span class="va">False</span>).agg(</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    avg_node_degree<span class="op">=</span>(<span class="st">'node_degree'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    avg_clustering_coefficient<span class="op">=</span>(<span class="st">'clustering_coefficient'</span>, <span class="st">'mean'</span>)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="load-data-from-python" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="load-data-from-python"><span class="header-section-number">7.1.2</span> load data from python</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fr_r <span class="ot">&lt;-</span> py<span class="sc">$</span>fr</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>pr_r <span class="ot">&lt;-</span> py<span class="sc">$</span>pr</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Z matrix</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>Z_df <span class="ot">&lt;-</span> py<span class="sc">$</span>Z_df</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>genres_attribute_data_r <span class="ot">&lt;-</span> py<span class="sc">$</span>genres_attribute_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="create-network-from-z-matrix" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="create-network-from-z-matrix"><span class="header-section-number">7.1.3</span> create network from Z matrix</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Z_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Z_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>attribute_list <span class="ot">&lt;-</span> <span class="fu">do.call</span>(list, genres_attribute_data_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>genres_net <span class="ot">&lt;-</span> <span class="fu">network</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> Z_matrix, <span class="at">directed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">vertex.attr =</span> attribute_list</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>genres_net</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Network attributes:
+  vertices = 84 
+  directed = FALSE 
+  hyper = FALSE 
+  loops = FALSE 
+  multiple = FALSE 
+  bipartite = FALSE 
+  total edges= 2779 
+    missing edges= 0 
+    non-missing edges= 2779 
+
+ Vertex attribute names: 
+    avg_clustering_coefficient avg_node_degree genres vertex.names 
+
+ Edge attribute names not shown </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="network-visualization" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="network-visualization"><span class="header-section-number">7.2</span> Network visualization</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(genres_net)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Yueh-Lin_Tsai_SMM638_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="descriptive-statistics" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="descriptive-statistics"><span class="header-section-number">7.3</span> Descriptive statistics</h2>
+<section id="density" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="density"><span class="header-section-number">7.3.1</span> density</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gden</span>(genres_net)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7971888</code></pre>
+</div>
+</div>
+</section>
+<section id="cug-test" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="cug-test"><span class="header-section-number">7.3.2</span> cug test</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cug.test</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">dat =</span> genres_net, <span class="at">FUN =</span> <span class="st">"gden"</span>, <span class="at">cmode =</span> <span class="st">"size"</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Univariate Conditional Uniform Graph Test
+
+Conditioning Method: size 
+Graph Type: digraph 
+Diagonal Used: FALSE 
+Replications: 1000 
+
+Observed Value: 0.7971888 
+Pr(X&gt;=Obs): 0 
+Pr(X&lt;=Obs): 1 </code></pre>
+</div>
+</div>
+</section>
+<section id="reciprocity" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="reciprocity"><span class="header-section-number">7.3.3</span> reciprocity</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grecip</span>(genres_net, <span class="at">measure =</span> <span class="st">"dyadic.nonnull"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mut 
+  1 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cug.test</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">dat =</span> genres_net, <span class="at">FUN =</span> <span class="st">"grecip"</span>,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">measure =</span> <span class="st">"dyadic.nonnull"</span>), <span class="at">cmode =</span> <span class="st">"edges"</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Univariate Conditional Uniform Graph Test
+
+Conditioning Method: edges 
+Graph Type: digraph 
+Diagonal Used: FALSE 
+Replications: 1000 
+
+Observed Value: 1 
+Pr(X&gt;=Obs): 0 
+Pr(X&lt;=Obs): 1 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="ergm-estimation" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="ergm-estimation"><span class="header-section-number">7.4</span> ERGM estimation</h2>
+<section id="simple-edge-model" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="simple-edge-model"><span class="header-section-number">7.4.1</span> Simple ‘edge’ model</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>mod_rand <span class="ot">&lt;-</span> <span class="fu">ergm</span>(<span class="at">formula =</span> genres_net <span class="sc">~</span> edges)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_rand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = genres_net ~ edges)
+
+Maximum Likelihood Results:
+
+      Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
+edges  1.36882    0.04212      0    32.5   &lt;1e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 4833  on 3486  degrees of freedom
+ Residual Deviance: 3516  on 3485  degrees of freedom
+ 
+AIC: 3518  BIC: 3524  (Smaller is better. MC Std. Err. = 0)</code></pre>
+</div>
+</div>
+</section>
+<section id="edges-node-attributes" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="edges-node-attributes"><span class="header-section-number">7.4.2</span> Edges &amp; node attributes</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>mod_homoph1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(genres_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_clustering_coefficient"</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_homoph1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = genres_net ~ edges + absdiff("avg_node_degree") + 
+    absdiff("avg_clustering_coefficient"))
+
+Maximum Likelihood Results:
+
+                                    Estimate Std. Error MCMC % z value Pr(&gt;|z|)
+edges                                2.79217    0.08566      0   32.60   &lt;1e-04
+absdiff.avg_node_degree             -0.15128    0.01458      0  -10.38   &lt;1e-04
+absdiff.avg_clustering_coefficient -16.00433    1.43762      0  -11.13   &lt;1e-04
+                                      
+edges                              ***
+absdiff.avg_node_degree            ***
+absdiff.avg_clustering_coefficient ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 4833  on 3486  degrees of freedom
+ Residual Deviance: 2926  on 3483  degrees of freedom
+ 
+AIC: 2932  BIC: 2950  (Smaller is better. MC Std. Err. = 0)</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>mod_homoph2 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(genres_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_clustering_coefficient"</span>) <span class="sc">+</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nodecov</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nodecov</span>(<span class="st">"avg_clustering_coefficient"</span>))</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_homoph2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = genres_net ~ edges + absdiff("avg_node_degree") + 
+    absdiff("avg_clustering_coefficient") + nodecov("avg_node_degree") + 
+    nodecov("avg_clustering_coefficient"))
+
+Maximum Likelihood Results:
+
+                                     Estimate Std. Error MCMC % z value
+edges                                0.587854   0.347280      0   1.693
+absdiff.avg_node_degree             -0.091987   0.016128      0  -5.704
+absdiff.avg_clustering_coefficient -14.339354   1.523784      0  -9.410
+nodecov.avg_node_degree             -0.019085   0.008942      0  -2.134
+nodecov.avg_clustering_coefficient  11.528102   1.068248      0  10.792
+                                   Pr(&gt;|z|)    
+edges                                0.0905 .  
+absdiff.avg_node_degree              &lt;1e-04 ***
+absdiff.avg_clustering_coefficient   &lt;1e-04 ***
+nodecov.avg_node_degree              0.0328 *  
+nodecov.avg_clustering_coefficient   &lt;1e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 4833  on 3486  degrees of freedom
+ Residual Deviance: 2794  on 3481  degrees of freedom
+ 
+AIC: 2804  BIC: 2835  (Smaller is better. MC Std. Err. = 0)</code></pre>
+</div>
+</div>
+<!-- -->
+
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb62" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Course Project"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Yueh-Lin Tsai"</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> last-modified</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="an">abstract-title:</span><span class="co"> Overview</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> This is Final Course Project</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="an">warning:</span><span class="co"> false</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: Table of Contents </span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: right</span></span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a><span class="co">    citations-hover: false</span></span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a><span class="co">    footnotes-hover: false</span></span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a><span class="co">    crossrefs-hover: false</span></span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: journal</span></span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 9</span></span>
+<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 6</span></span>
+<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a><span class="co">  typst: default</span></span>
+<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a><span class="co">  ipynb: default</span></span>
+<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a><span class="co">  docx: default</span></span>
+<span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># Import libraries</span></span>
+<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## R library</span></span>
+<span id="cb62-32"><a href="#cb62-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-33"><a href="#cb62-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb62-34"><a href="#cb62-34" aria-hidden="true" tabindex="-1"></a><span class="co">#use_condaenv("smm638", required = TRUE)</span></span>
+<span id="cb62-35"><a href="#cb62-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb62-36"><a href="#cb62-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sna)</span>
+<span id="cb62-37"><a href="#cb62-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ergm)</span>
+<span id="cb62-38"><a href="#cb62-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb62-39"><a href="#cb62-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb62-40"><a href="#cb62-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-41"><a href="#cb62-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Python library</span></span>
+<span id="cb62-44"><a href="#cb62-44" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-45"><a href="#cb62-45" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb62-46"><a href="#cb62-46" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb62-47"><a href="#cb62-47" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> networkx.algorithms <span class="im">import</span> bipartite <span class="im">as</span> bp</span>
+<span id="cb62-48"><a href="#cb62-48" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb62-49"><a href="#cb62-49" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb62-50"><a href="#cb62-50" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb62-51"><a href="#cb62-51" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
+<span id="cb62-52"><a href="#cb62-52" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb62-53"><a href="#cb62-53" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> graph_tool.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb62-54"><a href="#cb62-54" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb62-55"><a href="#cb62-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-56"><a href="#cb62-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># Load data</span></span>
+<span id="cb62-57"><a href="#cb62-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## HR_edges.csv</span></span>
+<span id="cb62-60"><a href="#cb62-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-61"><a href="#cb62-61" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
+<span id="cb62-62"><a href="#cb62-62" aria-hidden="true" tabindex="-1"></a>fr <span class="op">=</span> pd.read_csv(<span class="st">'/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_edges.csv'</span>)</span>
+<span id="cb62-63"><a href="#cb62-63" aria-hidden="true" tabindex="-1"></a><span class="co"># data preview</span></span>
+<span id="cb62-64"><a href="#cb62-64" aria-hidden="true" tabindex="-1"></a>fr.head()</span>
+<span id="cb62-65"><a href="#cb62-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-66"><a href="#cb62-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-67"><a href="#cb62-67" aria-hidden="true" tabindex="-1"></a><span class="fu">## HR_genres.json</span></span>
+<span id="cb62-70"><a href="#cb62-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-71"><a href="#cb62-71" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb62-72"><a href="#cb62-72" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'/Users/adam/Desktop/Bayes/Class/Network_Analytics/SMM638/FCP/deezer_clean_data/HR_genres.json'</span>, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb62-73"><a href="#cb62-73" aria-hidden="true" tabindex="-1"></a>    pr_json <span class="op">=</span> json.load(f)</span>
+<span id="cb62-74"><a href="#cb62-74" aria-hidden="true" tabindex="-1"></a>pr_json[<span class="st">"11542"</span>]</span>
+<span id="cb62-75"><a href="#cb62-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-76"><a href="#cb62-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-77"><a href="#cb62-77" aria-hidden="true" tabindex="-1"></a><span class="fu">### Convert the dictionary into a Pandas </span></span>
+<span id="cb62-80"><a href="#cb62-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-81"><a href="#cb62-81" aria-hidden="true" tabindex="-1"></a>pr <span class="op">=</span> pd.json_normalize(pr_json).T</span>
+<span id="cb62-82"><a href="#cb62-82" aria-hidden="true" tabindex="-1"></a>pr.rename({<span class="dv">0</span>: <span class="st">'genres'</span>}, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-83"><a href="#cb62-83" aria-hidden="true" tabindex="-1"></a>pr.head()</span>
+<span id="cb62-84"><a href="#cb62-84" aria-hidden="true" tabindex="-1"></a>pr_original <span class="op">=</span> pr</span>
+<span id="cb62-85"><a href="#cb62-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-86"><a href="#cb62-86" aria-hidden="true" tabindex="-1"></a><span class="fu">### Separate rows</span></span>
+<span id="cb62-89"><a href="#cb62-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-90"><a href="#cb62-90" aria-hidden="true" tabindex="-1"></a>pr <span class="op">=</span> pr.explode(<span class="st">'genres'</span>)</span>
+<span id="cb62-91"><a href="#cb62-91" aria-hidden="true" tabindex="-1"></a>pr.reset_index(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-92"><a href="#cb62-92" aria-hidden="true" tabindex="-1"></a>pr.rename({<span class="st">'index'</span>: <span class="st">'user_id'</span>}, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-93"><a href="#cb62-93" aria-hidden="true" tabindex="-1"></a>pr.head()</span>
+<span id="cb62-94"><a href="#cb62-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-95"><a href="#cb62-95" aria-hidden="true" tabindex="-1"></a><span class="fu"># two-mode (Bipartite) networks</span></span>
+<span id="cb62-96"><a href="#cb62-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## data botton_nodes top_nodes edges</span></span>
+<span id="cb62-99"><a href="#cb62-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-100"><a href="#cb62-100" aria-hidden="true" tabindex="-1"></a>bottom_nodes <span class="op">=</span> pr[<span class="st">"user_id"</span>].drop_duplicates().reset_index(drop<span class="op">=</span><span class="va">True</span>).to_numpy()</span>
+<span id="cb62-101"><a href="#cb62-101" aria-hidden="true" tabindex="-1"></a>top_nodes <span class="op">=</span> pr[<span class="st">"genres"</span>].drop_duplicates().reset_index(drop<span class="op">=</span><span class="va">True</span>).to_numpy()</span>
+<span id="cb62-102"><a href="#cb62-102" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> pr[[<span class="st">'user_id'</span>, <span class="st">'genres'</span>]].values.tolist()</span>
+<span id="cb62-103"><a href="#cb62-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-104"><a href="#cb62-104" aria-hidden="true" tabindex="-1"></a><span class="fu">## Graph creation</span></span>
+<span id="cb62-107"><a href="#cb62-107" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-108"><a href="#cb62-108" aria-hidden="true" tabindex="-1"></a><span class="co"># empty graph</span></span>
+<span id="cb62-109"><a href="#cb62-109" aria-hidden="true" tabindex="-1"></a>bg <span class="op">=</span> nx.Graph()</span>
+<span id="cb62-110"><a href="#cb62-110" aria-hidden="true" tabindex="-1"></a><span class="co"># add nodes</span></span>
+<span id="cb62-111"><a href="#cb62-111" aria-hidden="true" tabindex="-1"></a>bg.add_nodes_from(bottom_nodes, bipartite<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb62-112"><a href="#cb62-112" aria-hidden="true" tabindex="-1"></a>bg.add_nodes_from(top_nodes, bipartite<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb62-113"><a href="#cb62-113" aria-hidden="true" tabindex="-1"></a><span class="co"># get nx object</span></span>
+<span id="cb62-114"><a href="#cb62-114" aria-hidden="true" tabindex="-1"></a>bg.add_edges_from(edges)</span>
+<span id="cb62-115"><a href="#cb62-115" aria-hidden="true" tabindex="-1"></a><span class="co"># `is bipartite` check</span></span>
+<span id="cb62-116"><a href="#cb62-116" aria-hidden="true" tabindex="-1"></a>is_bip <span class="op">=</span> nx.is_bipartite(bg)</span>
+<span id="cb62-117"><a href="#cb62-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-118"><a href="#cb62-118" aria-hidden="true" tabindex="-1"></a><span class="fu">## Weighted projections of the two-mode networks</span></span>
+<span id="cb62-121"><a href="#cb62-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-122"><a href="#cb62-122" aria-hidden="true" tabindex="-1"></a><span class="co">#g_b_w = bp.weighted_projected_graph(bg, bottom_nodes, ratio=True)</span></span>
+<span id="cb62-123"><a href="#cb62-123" aria-hidden="true" tabindex="-1"></a>g_t_w <span class="op">=</span> bp.weighted_projected_graph(bg, top_nodes, ratio<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-124"><a href="#cb62-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-125"><a href="#cb62-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## plot two-mode networks network</span></span>
+<span id="cb62-128"><a href="#cb62-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-129"><a href="#cb62-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure and specify the size</span></span>
+<span id="cb62-130"><a href="#cb62-130" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb62-131"><a href="#cb62-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-132"><a href="#cb62-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the network</span></span>
+<span id="cb62-133"><a href="#cb62-133" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> g_t_w.edges(data<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-134"><a href="#cb62-134" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [w[<span class="st">"weight"</span>] <span class="cf">for</span> u, v, w <span class="kw">in</span> edges]</span>
+<span id="cb62-135"><a href="#cb62-135" aria-hidden="true" tabindex="-1"></a>vmin <span class="op">=</span> <span class="bu">min</span>(weights)</span>
+<span id="cb62-136"><a href="#cb62-136" aria-hidden="true" tabindex="-1"></a>vmax <span class="op">=</span> <span class="bu">max</span>(weights)</span>
+<span id="cb62-137"><a href="#cb62-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-138"><a href="#cb62-138" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_t_w)</span>
+<span id="cb62-139"><a href="#cb62-139" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb62-140"><a href="#cb62-140" aria-hidden="true" tabindex="-1"></a>    g_t_w,</span>
+<span id="cb62-141"><a href="#cb62-141" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb62-142"><a href="#cb62-142" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb62-143"><a href="#cb62-143" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span><span class="st">"lightgreen"</span>,</span>
+<span id="cb62-144"><a href="#cb62-144" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb62-145"><a href="#cb62-145" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>weights,</span>
+<span id="cb62-146"><a href="#cb62-146" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Reds,</span>
+<span id="cb62-147"><a href="#cb62-147" aria-hidden="true" tabindex="-1"></a>    edge_vmin<span class="op">=</span>vmin,</span>
+<span id="cb62-148"><a href="#cb62-148" aria-hidden="true" tabindex="-1"></a>    edge_vmax<span class="op">=</span>vmax,</span>
+<span id="cb62-149"><a href="#cb62-149" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-150"><a href="#cb62-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-151"><a href="#cb62-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Add text annotation if needed</span></span>
+<span id="cb62-152"><a href="#cb62-152" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="dv">1</span>, <span class="dv">1</span>, <span class="st">"A"</span>, fontsize<span class="op">=</span><span class="dv">12</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb62-153"><a href="#cb62-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-154"><a href="#cb62-154" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb62-155"><a href="#cb62-155" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb62-156"><a href="#cb62-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-157"><a href="#cb62-157" aria-hidden="true" tabindex="-1"></a><span class="fu"># Create Z matrix</span></span>
+<span id="cb62-158"><a href="#cb62-158" aria-hidden="true" tabindex="-1"></a><span class="fu">## create X matrix and Z matrix</span></span>
+<span id="cb62-161"><a href="#cb62-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-162"><a href="#cb62-162" aria-hidden="true" tabindex="-1"></a>user_genre_matrix <span class="op">=</span> pr.pivot_table(index<span class="op">=</span><span class="st">'user_id'</span>, columns<span class="op">=</span><span class="st">'genres'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: <span class="dv">1</span>, fill_value<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb62-163"><a href="#cb62-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-164"><a href="#cb62-164" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate genre-genre matrix Z</span></span>
+<span id="cb62-165"><a href="#cb62-165" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> np.dot(user_genre_matrix.T, user_genre_matrix)</span>
+<span id="cb62-166"><a href="#cb62-166" aria-hidden="true" tabindex="-1"></a><span class="co"># print(Z)</span></span>
+<span id="cb62-167"><a href="#cb62-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-168"><a href="#cb62-168" aria-hidden="true" tabindex="-1"></a><span class="co"># change ndarray Z to DataFrame</span></span>
+<span id="cb62-169"><a href="#cb62-169" aria-hidden="true" tabindex="-1"></a>Z_df <span class="op">=</span> pd.DataFrame(Z, index<span class="op">=</span>user_genre_matrix.columns, columns<span class="op">=</span>user_genre_matrix.columns)</span>
+<span id="cb62-170"><a href="#cb62-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-171"><a href="#cb62-171" aria-hidden="true" tabindex="-1"></a>Z_df</span>
+<span id="cb62-172"><a href="#cb62-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-173"><a href="#cb62-173" aria-hidden="true" tabindex="-1"></a><span class="fu"># Community Detection</span></span>
+<span id="cb62-174"><a href="#cb62-174" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualize the network</span></span>
+<span id="cb62-177"><a href="#cb62-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-178"><a href="#cb62-178" aria-hidden="true" tabindex="-1"></a><span class="co"># fix node positions for better visualization</span></span>
+<span id="cb62-179"><a href="#cb62-179" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.spring_layout(g_t_w, seed<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb62-180"><a href="#cb62-180" aria-hidden="true" tabindex="-1"></a><span class="co"># draw the network</span></span>
+<span id="cb62-181"><a href="#cb62-181" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb62-182"><a href="#cb62-182" aria-hidden="true" tabindex="-1"></a>    g_t_w, pos, with_labels<span class="op">=</span><span class="va">True</span>, node_color<span class="op">=</span><span class="st">"lightgray"</span>, node_size<span class="op">=</span><span class="dv">300</span>, edge_color<span class="op">=</span><span class="st">"gray"</span></span>
+<span id="cb62-183"><a href="#cb62-183" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-184"><a href="#cb62-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-185"><a href="#cb62-185" aria-hidden="true" tabindex="-1"></a><span class="fu">## Community detection using Girvan-Newman’s algorithm</span></span>
+<span id="cb62-188"><a href="#cb62-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-189"><a href="#cb62-189" aria-hidden="true" tabindex="-1"></a><span class="co"># edge betweenness centrality</span></span>
+<span id="cb62-190"><a href="#cb62-190" aria-hidden="true" tabindex="-1"></a>edge_betweenness <span class="op">=</span> nx.edge_betweenness_centrality(g_t_w)</span>
+<span id="cb62-191"><a href="#cb62-191" aria-hidden="true" tabindex="-1"></a><span class="co"># set the value min and max make color lookable</span></span>
+<span id="cb62-192"><a href="#cb62-192" aria-hidden="true" tabindex="-1"></a>vmin <span class="op">=</span> <span class="bu">min</span>(edge_betweenness.values())</span>
+<span id="cb62-193"><a href="#cb62-193" aria-hidden="true" tabindex="-1"></a>vmax <span class="op">=</span> <span class="bu">max</span>(edge_betweenness.values())</span>
+<span id="cb62-194"><a href="#cb62-194" aria-hidden="true" tabindex="-1"></a><span class="co"># network visualization</span></span>
+<span id="cb62-195"><a href="#cb62-195" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_t_w)</span>
+<span id="cb62-196"><a href="#cb62-196" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb62-197"><a href="#cb62-197" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb62-198"><a href="#cb62-198" aria-hidden="true" tabindex="-1"></a>    g_t_w,</span>
+<span id="cb62-199"><a href="#cb62-199" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb62-200"><a href="#cb62-200" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb62-201"><a href="#cb62-201" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span><span class="st">"lightgray"</span>,</span>
+<span id="cb62-202"><a href="#cb62-202" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb62-203"><a href="#cb62-203" aria-hidden="true" tabindex="-1"></a>    edgelist<span class="op">=</span>edge_betweenness.keys(),</span>
+<span id="cb62-204"><a href="#cb62-204" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span><span class="bu">list</span>(edge_betweenness.values()),</span>
+<span id="cb62-205"><a href="#cb62-205" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Reds,</span>
+<span id="cb62-206"><a href="#cb62-206" aria-hidden="true" tabindex="-1"></a>    edge_vmin<span class="op">=</span>vmin,</span>
+<span id="cb62-207"><a href="#cb62-207" aria-hidden="true" tabindex="-1"></a>    edge_vmax<span class="op">=</span>vmax,</span>
+<span id="cb62-208"><a href="#cb62-208" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-209"><a href="#cb62-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-210"><a href="#cb62-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-211"><a href="#cb62-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-212"><a href="#cb62-212" aria-hidden="true" tabindex="-1"></a><span class="fu">## Community detection using Louvaine’s algorithm (Z matrix)</span></span>
+<span id="cb62-213"><a href="#cb62-213" aria-hidden="true" tabindex="-1"></a><span class="fu">### Change Z matrix to Graph</span></span>
+<span id="cb62-216"><a href="#cb62-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-217"><a href="#cb62-217" aria-hidden="true" tabindex="-1"></a>g_z_matrix <span class="op">=</span> nx.Graph()</span>
+<span id="cb62-218"><a href="#cb62-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-219"><a href="#cb62-219" aria-hidden="true" tabindex="-1"></a><span class="co"># add node</span></span>
+<span id="cb62-220"><a href="#cb62-220" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> node <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb62-221"><a href="#cb62-221" aria-hidden="true" tabindex="-1"></a>    g_z_matrix.add_node(node)</span>
+<span id="cb62-222"><a href="#cb62-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-223"><a href="#cb62-223" aria-hidden="true" tabindex="-1"></a><span class="co"># add edges</span></span>
+<span id="cb62-224"><a href="#cb62-224" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb62-225"><a href="#cb62-225" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> Z_df.columns:</span>
+<span id="cb62-226"><a href="#cb62-226" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">!=</span> j <span class="kw">and</span> Z_df.loc[i, j] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb62-227"><a href="#cb62-227" aria-hidden="true" tabindex="-1"></a>            g_z_matrix.add_edge(i, j, weight<span class="op">=</span>Z_df.loc[i, j])</span>
+<span id="cb62-228"><a href="#cb62-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-229"><a href="#cb62-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-230"><a href="#cb62-230" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fit the Louvain algorithm to the weighted network</span></span>
+<span id="cb62-233"><a href="#cb62-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-234"><a href="#cb62-234" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the Louvain algorithm to the weighted network</span></span>
+<span id="cb62-235"><a href="#cb62-235" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> nx.community.louvain_communities(g_z_matrix, weight<span class="op">=</span><span class="st">"weight"</span>)</span>
+<span id="cb62-236"><a href="#cb62-236" aria-hidden="true" tabindex="-1"></a><span class="co"># retrieve the communities</span></span>
+<span id="cb62-237"><a href="#cb62-237" aria-hidden="true" tabindex="-1"></a>communities <span class="op">=</span> <span class="bu">tuple</span>(<span class="bu">sorted</span>(c) <span class="cf">for</span> c <span class="kw">in</span> fit)</span>
+<span id="cb62-238"><a href="#cb62-238" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the network with the identified communities</span></span>
+<span id="cb62-239"><a href="#cb62-239" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [</span>
+<span id="cb62-240"><a href="#cb62-240" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb62-241"><a href="#cb62-241" aria-hidden="true" tabindex="-1"></a>        <span class="st">"plum"</span> <span class="cf">if</span> node <span class="kw">in</span> communities[<span class="dv">0</span>]</span>
+<span id="cb62-242"><a href="#cb62-242" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> <span class="st">"lightgreen"</span> <span class="cf">if</span> node <span class="kw">in</span> communities[<span class="dv">1</span>]</span>
+<span id="cb62-243"><a href="#cb62-243" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> <span class="st">"lightblue"</span></span>
+<span id="cb62-244"><a href="#cb62-244" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb62-245"><a href="#cb62-245" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node <span class="kw">in</span> g_z_matrix.nodes</span>
+<span id="cb62-246"><a href="#cb62-246" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb62-247"><a href="#cb62-247" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the network</span></span>
+<span id="cb62-248"><a href="#cb62-248" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.kamada_kawai_layout(g_z_matrix)</span>
+<span id="cb62-249"><a href="#cb62-249" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb62-250"><a href="#cb62-250" aria-hidden="true" tabindex="-1"></a>nx.draw(</span>
+<span id="cb62-251"><a href="#cb62-251" aria-hidden="true" tabindex="-1"></a>    g_z_matrix,</span>
+<span id="cb62-252"><a href="#cb62-252" aria-hidden="true" tabindex="-1"></a>    pos,</span>
+<span id="cb62-253"><a href="#cb62-253" aria-hidden="true" tabindex="-1"></a>    with_labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb62-254"><a href="#cb62-254" aria-hidden="true" tabindex="-1"></a>    node_color<span class="op">=</span>colors,</span>
+<span id="cb62-255"><a href="#cb62-255" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb62-256"><a href="#cb62-256" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>[g_z_matrix[u][v][<span class="st">"weight"</span>] <span class="cf">for</span> u, v <span class="kw">in</span> g_z_matrix.edges],</span>
+<span id="cb62-257"><a href="#cb62-257" aria-hidden="true" tabindex="-1"></a>    edge_cmap<span class="op">=</span>plt.cm.Greens,</span>
+<span id="cb62-258"><a href="#cb62-258" aria-hidden="true" tabindex="-1"></a>    <span class="co">#alpha=0.5,</span></span>
+<span id="cb62-259"><a href="#cb62-259" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-260"><a href="#cb62-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-261"><a href="#cb62-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-262"><a href="#cb62-262" aria-hidden="true" tabindex="-1"></a><span class="fu"># Weighted Stochastic Blockmodeling (WSBM)</span></span>
+<span id="cb62-263"><a href="#cb62-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Change NetworkX graph into graph-tool graph</span></span>
+<span id="cb62-266"><a href="#cb62-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-267"><a href="#cb62-267" aria-hidden="true" tabindex="-1"></a><span class="co"># create graph-tool's graph</span></span>
+<span id="cb62-268"><a href="#cb62-268" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM <span class="op">=</span> Graph(directed<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb62-269"><a href="#cb62-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-270"><a href="#cb62-270" aria-hidden="true" tabindex="-1"></a><span class="co"># add node</span></span>
+<span id="cb62-271"><a href="#cb62-271" aria-hidden="true" tabindex="-1"></a>vprops <span class="op">=</span> g_z_matrix_WSBM.new_vertex_property(<span class="st">"string"</span>)</span>
+<span id="cb62-272"><a href="#cb62-272" aria-hidden="true" tabindex="-1"></a>vertices <span class="op">=</span> {}</span>
+<span id="cb62-273"><a href="#cb62-273" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> node <span class="kw">in</span> g_z_matrix.nodes:</span>
+<span id="cb62-274"><a href="#cb62-274" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> g_z_matrix_WSBM.add_vertex()</span>
+<span id="cb62-275"><a href="#cb62-275" aria-hidden="true" tabindex="-1"></a>    vertices[node] <span class="op">=</span> v</span>
+<span id="cb62-276"><a href="#cb62-276" aria-hidden="true" tabindex="-1"></a>    vprops[v] <span class="op">=</span> node</span>
+<span id="cb62-277"><a href="#cb62-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-278"><a href="#cb62-278" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.vp[<span class="st">"name"</span>] <span class="op">=</span> vprops</span>
+<span id="cb62-279"><a href="#cb62-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-280"><a href="#cb62-280" aria-hidden="true" tabindex="-1"></a><span class="co"># add edge</span></span>
+<span id="cb62-281"><a href="#cb62-281" aria-hidden="true" tabindex="-1"></a>eweights <span class="op">=</span> g_z_matrix_WSBM.new_edge_property(<span class="st">"float"</span>)</span>
+<span id="cb62-282"><a href="#cb62-282" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u, v, data <span class="kw">in</span> g_z_matrix.edges(data<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb62-283"><a href="#cb62-283" aria-hidden="true" tabindex="-1"></a>    edge <span class="op">=</span> g_z_matrix_WSBM.add_edge(vertices[u], vertices[v])</span>
+<span id="cb62-284"><a href="#cb62-284" aria-hidden="true" tabindex="-1"></a>    eweights[edge] <span class="op">=</span> data[<span class="st">"weight"</span>]</span>
+<span id="cb62-285"><a href="#cb62-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-286"><a href="#cb62-286" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.ep[<span class="st">"weight"</span>] <span class="op">=</span> eweights  <span class="co"># add weight to graph</span></span>
+<span id="cb62-287"><a href="#cb62-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-288"><a href="#cb62-288" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-289"><a href="#cb62-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-290"><a href="#cb62-290" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inferring the Modular Structure of Networks with Weighted Stochastic Blockmodeling</span></span>
+<span id="cb62-293"><a href="#cb62-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-294"><a href="#cb62-294" aria-hidden="true" tabindex="-1"></a><span class="co"># set random seed</span></span>
+<span id="cb62-295"><a href="#cb62-295" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">41</span></span>
+<span id="cb62-296"><a href="#cb62-296" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
+<span id="cb62-297"><a href="#cb62-297" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
+<span id="cb62-298"><a href="#cb62-298" aria-hidden="true" tabindex="-1"></a>graph_tool.<span class="bu">all</span>.seed_rng(seed)</span>
+<span id="cb62-299"><a href="#cb62-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-300"><a href="#cb62-300" aria-hidden="true" tabindex="-1"></a><span class="co"># model fit</span></span>
+<span id="cb62-301"><a href="#cb62-301" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> minimize_nested_blockmodel_dl(</span>
+<span id="cb62-302"><a href="#cb62-302" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM, state_args<span class="op">=</span><span class="bu">dict</span>(recs<span class="op">=</span>[g_z_matrix_WSBM.ep.weight], rec_types<span class="op">=</span>[<span class="st">"real-exponential"</span>])</span>
+<span id="cb62-303"><a href="#cb62-303" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-304"><a href="#cb62-304" aria-hidden="true" tabindex="-1"></a><span class="co"># improve solution with merge-split</span></span>
+<span id="cb62-305"><a href="#cb62-305" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
+<span id="cb62-306"><a href="#cb62-306" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> state.multiflip_mcmc_sweep(niter<span class="op">=</span><span class="dv">10</span>, beta<span class="op">=</span>np.inf)</span>
+<span id="cb62-307"><a href="#cb62-307" aria-hidden="true" tabindex="-1"></a>state.draw(</span>
+<span id="cb62-308"><a href="#cb62-308" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb62-309"><a href="#cb62-309" aria-hidden="true" tabindex="-1"></a>    ecmap<span class="op">=</span>(matplotlib.cm.inferno, <span class="fl">0.6</span>),</span>
+<span id="cb62-310"><a href="#cb62-310" aria-hidden="true" tabindex="-1"></a>    eorder<span class="op">=</span>g_z_matrix_WSBM.ep.weight,</span>
+<span id="cb62-311"><a href="#cb62-311" aria-hidden="true" tabindex="-1"></a>    edge_pen_width<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, <span class="dv">1</span>, <span class="dv">4</span>, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb62-312"><a href="#cb62-312" aria-hidden="true" tabindex="-1"></a>    edge_gradient<span class="op">=</span>[],</span>
+<span id="cb62-313"><a href="#cb62-313" aria-hidden="true" tabindex="-1"></a>    output_size<span class="op">=</span>(<span class="dv">800</span>, <span class="dv">800</span>),</span>
+<span id="cb62-314"><a href="#cb62-314" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"genre-wsbm.png"</span>,</span>
+<span id="cb62-315"><a href="#cb62-315" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-316"><a href="#cb62-316" aria-hidden="true" tabindex="-1"></a><span class="co"># show the plot</span></span>
+<span id="cb62-317"><a href="#cb62-317" aria-hidden="true" tabindex="-1"></a><span class="co">#Image(filename="genre-wsbm.png")</span></span>
+<span id="cb62-318"><a href="#cb62-318" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> matplotlib.image.imread(<span class="st">'genre-wsbm.png'</span>)</span>
+<span id="cb62-319"><a href="#cb62-319" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span>
+<span id="cb62-320"><a href="#cb62-320" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb62-321"><a href="#cb62-321" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb62-322"><a href="#cb62-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-323"><a href="#cb62-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-324"><a href="#cb62-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## Getting a Multi-Level Community Classification</span></span>
+<span id="cb62-327"><a href="#cb62-327" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-328"><a href="#cb62-328" aria-hidden="true" tabindex="-1"></a>levels <span class="op">=</span> state.get_bs()</span>
+<span id="cb62-329"><a href="#cb62-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-330"><a href="#cb62-330" aria-hidden="true" tabindex="-1"></a>level_communities <span class="op">=</span> []</span>
+<span id="cb62-331"><a href="#cb62-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-332"><a href="#cb62-332" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> level_idx, level <span class="kw">in</span> <span class="bu">enumerate</span>(levels):</span>
+<span id="cb62-333"><a href="#cb62-333" aria-hidden="true" tabindex="-1"></a>    community_mapping <span class="op">=</span> {}</span>
+<span id="cb62-334"><a href="#cb62-334" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_idx, community_id <span class="kw">in</span> <span class="bu">enumerate</span>(level):</span>
+<span id="cb62-335"><a href="#cb62-335" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> community_id <span class="kw">not</span> <span class="kw">in</span> community_mapping:</span>
+<span id="cb62-336"><a href="#cb62-336" aria-hidden="true" tabindex="-1"></a>            community_mapping[community_id] <span class="op">=</span> []</span>
+<span id="cb62-337"><a href="#cb62-337" aria-hidden="true" tabindex="-1"></a>        community_mapping[community_id].append(g_z_matrix_WSBM.vp[<span class="st">"name"</span>][v_idx])</span>
+<span id="cb62-338"><a href="#cb62-338" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb62-339"><a href="#cb62-339" aria-hidden="true" tabindex="-1"></a>    level_communities.append(community_mapping)</span>
+<span id="cb62-340"><a href="#cb62-340" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Level </span><span class="sc">{</span>level_idx<span class="sc">}</span><span class="ss"> Communities:"</span>)</span>
+<span id="cb62-341"><a href="#cb62-341" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, nodes <span class="kw">in</span> community_mapping.items():</span>
+<span id="cb62-342"><a href="#cb62-342" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  Community </span><span class="sc">{</span>community_id<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>nodes<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb62-343"><a href="#cb62-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-344"><a href="#cb62-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-345"><a href="#cb62-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-346"><a href="#cb62-346" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualisation of WSBM </span></span>
+<span id="cb62-349"><a href="#cb62-349" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-350"><a href="#cb62-350" aria-hidden="true" tabindex="-1"></a><span class="co"># choose level</span></span>
+<span id="cb62-351"><a href="#cb62-351" aria-hidden="true" tabindex="-1"></a>selected_level <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb62-352"><a href="#cb62-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-353"><a href="#cb62-353" aria-hidden="true" tabindex="-1"></a>level_blocks <span class="op">=</span> levels[selected_level]</span>
+<span id="cb62-354"><a href="#cb62-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-355"><a href="#cb62-355" aria-hidden="true" tabindex="-1"></a><span class="co"># color</span></span>
+<span id="cb62-356"><a href="#cb62-356" aria-hidden="true" tabindex="-1"></a>g_z_matrix_WSBM.vp[<span class="st">"color"</span>] <span class="op">=</span> g_z_matrix_WSBM.new_vp(<span class="st">"vector&lt;double&gt;"</span>)</span>
+<span id="cb62-357"><a href="#cb62-357" aria-hidden="true" tabindex="-1"></a>color_map <span class="op">=</span> {community_id: [np.random.rand(), np.random.rand(), np.random.rand()] <span class="cf">for</span> community_id <span class="kw">in</span> <span class="bu">set</span>(level_blocks)}</span>
+<span id="cb62-358"><a href="#cb62-358" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> g_z_matrix_WSBM.vertices():</span>
+<span id="cb62-359"><a href="#cb62-359" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM.vp[<span class="st">"color"</span>][v] <span class="op">=</span> color_map[level_blocks[<span class="bu">int</span>(v)]]</span>
+<span id="cb62-360"><a href="#cb62-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-361"><a href="#cb62-361" aria-hidden="true" tabindex="-1"></a><span class="co"># draw</span></span>
+<span id="cb62-362"><a href="#cb62-362" aria-hidden="true" tabindex="-1"></a>graph_draw(</span>
+<span id="cb62-363"><a href="#cb62-363" aria-hidden="true" tabindex="-1"></a>    g_z_matrix_WSBM,</span>
+<span id="cb62-364"><a href="#cb62-364" aria-hidden="true" tabindex="-1"></a>    vertex_fill_color<span class="op">=</span>g_z_matrix_WSBM.vp[<span class="st">"color"</span>],</span>
+<span id="cb62-365"><a href="#cb62-365" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span>prop_to_size(g_z_matrix_WSBM.ep.weight, power<span class="op">=</span><span class="dv">1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb62-366"><a href="#cb62-366" aria-hidden="true" tabindex="-1"></a>    output_size<span class="op">=</span>(<span class="dv">800</span>, <span class="dv">800</span>),</span>
+<span id="cb62-367"><a href="#cb62-367" aria-hidden="true" tabindex="-1"></a>    output<span class="op">=</span><span class="st">"level_0_visualization.png"</span>,</span>
+<span id="cb62-368"><a href="#cb62-368" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-369"><a href="#cb62-369" aria-hidden="true" tabindex="-1"></a><span class="co">#Image(filename="level_0_visualization.png")</span></span>
+<span id="cb62-370"><a href="#cb62-370" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> matplotlib.image.imread(<span class="st">'level_0_visualization.png'</span>)</span>
+<span id="cb62-371"><a href="#cb62-371" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span>
+<span id="cb62-372"><a href="#cb62-372" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb62-373"><a href="#cb62-373" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb62-374"><a href="#cb62-374" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-375"><a href="#cb62-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-376"><a href="#cb62-376" aria-hidden="true" tabindex="-1"></a><span class="fu"># Genres similarity network</span></span>
+<span id="cb62-377"><a href="#cb62-377" aria-hidden="true" tabindex="-1"></a><span class="fu">## Building Genres similarity Networks</span></span>
+<span id="cb62-378"><a href="#cb62-378" aria-hidden="true" tabindex="-1"></a><span class="fu">### calculate node_degree, clustering_coefficent</span></span>
+<span id="cb62-381"><a href="#cb62-381" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-382"><a href="#cb62-382" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> nx.from_pandas_edgelist(fr, source<span class="op">=</span><span class="st">"node_1"</span>, target<span class="op">=</span><span class="st">"node_2"</span>)</span>
+<span id="cb62-383"><a href="#cb62-383" aria-hidden="true" tabindex="-1"></a>nx.is_directed(g)</span>
+<span id="cb62-384"><a href="#cb62-384" aria-hidden="true" tabindex="-1"></a>nx.is_weighted(g)</span>
+<span id="cb62-385"><a href="#cb62-385" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-386"><a href="#cb62-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-389"><a href="#cb62-389" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-390"><a href="#cb62-390" aria-hidden="true" tabindex="-1"></a><span class="co"># node degree</span></span>
+<span id="cb62-391"><a href="#cb62-391" aria-hidden="true" tabindex="-1"></a>g_node_degree <span class="op">=</span> nx.degree(g)</span>
+<span id="cb62-392"><a href="#cb62-392" aria-hidden="true" tabindex="-1"></a>g_degree_dict <span class="op">=</span> <span class="bu">dict</span>(g_node_degree)</span>
+<span id="cb62-393"><a href="#cb62-393" aria-hidden="true" tabindex="-1"></a><span class="co"># clustering coefficent</span></span>
+<span id="cb62-394"><a href="#cb62-394" aria-hidden="true" tabindex="-1"></a>g_clustering <span class="op">=</span> nx.clustering(g)</span>
+<span id="cb62-395"><a href="#cb62-395" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-396"><a href="#cb62-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-399"><a href="#cb62-399" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb62-400"><a href="#cb62-400" aria-hidden="true" tabindex="-1"></a>node_metrics <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb62-401"><a href="#cb62-401" aria-hidden="true" tabindex="-1"></a>    <span class="st">'user_id'</span>: <span class="bu">list</span>(g_degree_dict.keys()),</span>
+<span id="cb62-402"><a href="#cb62-402" aria-hidden="true" tabindex="-1"></a>    <span class="st">'node_degree'</span>: <span class="bu">list</span>(g_degree_dict.values()),</span>
+<span id="cb62-403"><a href="#cb62-403" aria-hidden="true" tabindex="-1"></a>    <span class="st">'clustering_coefficient'</span>: [g_clustering[user_id] <span class="cf">for</span> user_id <span class="kw">in</span> g_degree_dict.keys()]</span>
+<span id="cb62-404"><a href="#cb62-404" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb62-405"><a href="#cb62-405" aria-hidden="true" tabindex="-1"></a>pr_new <span class="op">=</span> pr</span>
+<span id="cb62-406"><a href="#cb62-406" aria-hidden="true" tabindex="-1"></a>pr_new[<span class="st">'user_id'</span>] <span class="op">=</span> pd.to_numeric(pr_new[<span class="st">'user_id'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb62-407"><a href="#cb62-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-408"><a href="#cb62-408" aria-hidden="true" tabindex="-1"></a>combined_data <span class="op">=</span> pr_new.merge(node_metrics, on<span class="op">=</span><span class="st">'user_id'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb62-409"><a href="#cb62-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-410"><a href="#cb62-410" aria-hidden="true" tabindex="-1"></a>genres_attribute_data <span class="op">=</span> combined_data.groupby(<span class="st">'genres'</span>, as_index<span class="op">=</span><span class="va">False</span>).agg(</span>
+<span id="cb62-411"><a href="#cb62-411" aria-hidden="true" tabindex="-1"></a>    avg_node_degree<span class="op">=</span>(<span class="st">'node_degree'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb62-412"><a href="#cb62-412" aria-hidden="true" tabindex="-1"></a>    avg_clustering_coefficient<span class="op">=</span>(<span class="st">'clustering_coefficient'</span>, <span class="st">'mean'</span>)</span>
+<span id="cb62-413"><a href="#cb62-413" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-414"><a href="#cb62-414" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-415"><a href="#cb62-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-416"><a href="#cb62-416" aria-hidden="true" tabindex="-1"></a><span class="fu">### load data from python</span></span>
+<span id="cb62-419"><a href="#cb62-419" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-420"><a href="#cb62-420" aria-hidden="true" tabindex="-1"></a>fr_r <span class="ot">&lt;-</span> py<span class="sc">$</span>fr</span>
+<span id="cb62-421"><a href="#cb62-421" aria-hidden="true" tabindex="-1"></a>pr_r <span class="ot">&lt;-</span> py<span class="sc">$</span>pr</span>
+<span id="cb62-422"><a href="#cb62-422" aria-hidden="true" tabindex="-1"></a><span class="co"># Z matrix</span></span>
+<span id="cb62-423"><a href="#cb62-423" aria-hidden="true" tabindex="-1"></a>Z_df <span class="ot">&lt;-</span> py<span class="sc">$</span>Z_df</span>
+<span id="cb62-424"><a href="#cb62-424" aria-hidden="true" tabindex="-1"></a>genres_attribute_data_r <span class="ot">&lt;-</span> py<span class="sc">$</span>genres_attribute_data</span>
+<span id="cb62-425"><a href="#cb62-425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-426"><a href="#cb62-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-427"><a href="#cb62-427" aria-hidden="true" tabindex="-1"></a><span class="fu">### create network from Z matrix</span></span>
+<span id="cb62-430"><a href="#cb62-430" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-431"><a href="#cb62-431" aria-hidden="true" tabindex="-1"></a>Z_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Z_df)</span>
+<span id="cb62-432"><a href="#cb62-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-433"><a href="#cb62-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-436"><a href="#cb62-436" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-437"><a href="#cb62-437" aria-hidden="true" tabindex="-1"></a>attribute_list <span class="ot">&lt;-</span> <span class="fu">do.call</span>(list, genres_attribute_data_r)</span>
+<span id="cb62-438"><a href="#cb62-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-439"><a href="#cb62-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-442"><a href="#cb62-442" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-443"><a href="#cb62-443" aria-hidden="true" tabindex="-1"></a>genres_net <span class="ot">&lt;-</span> <span class="fu">network</span>(</span>
+<span id="cb62-444"><a href="#cb62-444" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> Z_matrix, <span class="at">directed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb62-445"><a href="#cb62-445" aria-hidden="true" tabindex="-1"></a>        <span class="at">vertex.attr =</span> attribute_list</span>
+<span id="cb62-446"><a href="#cb62-446" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-447"><a href="#cb62-447" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-448"><a href="#cb62-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-451"><a href="#cb62-451" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-452"><a href="#cb62-452" aria-hidden="true" tabindex="-1"></a>genres_net</span>
+<span id="cb62-453"><a href="#cb62-453" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-454"><a href="#cb62-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-455"><a href="#cb62-455" aria-hidden="true" tabindex="-1"></a><span class="fu">## Network visualization</span></span>
+<span id="cb62-458"><a href="#cb62-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-459"><a href="#cb62-459" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(genres_net)</span>
+<span id="cb62-460"><a href="#cb62-460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-461"><a href="#cb62-461" aria-hidden="true" tabindex="-1"></a><span class="fu">## Descriptive statistics</span></span>
+<span id="cb62-462"><a href="#cb62-462" aria-hidden="true" tabindex="-1"></a><span class="fu">### density</span></span>
+<span id="cb62-465"><a href="#cb62-465" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-466"><a href="#cb62-466" aria-hidden="true" tabindex="-1"></a><span class="fu">gden</span>(genres_net)</span>
+<span id="cb62-467"><a href="#cb62-467" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-468"><a href="#cb62-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-469"><a href="#cb62-469" aria-hidden="true" tabindex="-1"></a><span class="fu">### cug test</span></span>
+<span id="cb62-472"><a href="#cb62-472" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-473"><a href="#cb62-473" aria-hidden="true" tabindex="-1"></a><span class="fu">cug.test</span>(</span>
+<span id="cb62-474"><a href="#cb62-474" aria-hidden="true" tabindex="-1"></a>        <span class="at">dat =</span> genres_net, <span class="at">FUN =</span> <span class="st">"gden"</span>, <span class="at">cmode =</span> <span class="st">"size"</span></span>
+<span id="cb62-475"><a href="#cb62-475" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-476"><a href="#cb62-476" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-477"><a href="#cb62-477" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-478"><a href="#cb62-478" aria-hidden="true" tabindex="-1"></a><span class="fu">### reciprocity</span></span>
+<span id="cb62-481"><a href="#cb62-481" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-482"><a href="#cb62-482" aria-hidden="true" tabindex="-1"></a><span class="fu">grecip</span>(genres_net, <span class="at">measure =</span> <span class="st">"dyadic.nonnull"</span>)</span>
+<span id="cb62-483"><a href="#cb62-483" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-484"><a href="#cb62-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-487"><a href="#cb62-487" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-488"><a href="#cb62-488" aria-hidden="true" tabindex="-1"></a><span class="fu">cug.test</span>(</span>
+<span id="cb62-489"><a href="#cb62-489" aria-hidden="true" tabindex="-1"></a>        <span class="at">dat =</span> genres_net, <span class="at">FUN =</span> <span class="st">"grecip"</span>,</span>
+<span id="cb62-490"><a href="#cb62-490" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">measure =</span> <span class="st">"dyadic.nonnull"</span>), <span class="at">cmode =</span> <span class="st">"edges"</span></span>
+<span id="cb62-491"><a href="#cb62-491" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-492"><a href="#cb62-492" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-493"><a href="#cb62-493" aria-hidden="true" tabindex="-1"></a><span class="fu">## ERGM estimation</span></span>
+<span id="cb62-494"><a href="#cb62-494" aria-hidden="true" tabindex="-1"></a><span class="fu">### Simple 'edge' model</span></span>
+<span id="cb62-497"><a href="#cb62-497" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-498"><a href="#cb62-498" aria-hidden="true" tabindex="-1"></a>mod_rand <span class="ot">&lt;-</span> <span class="fu">ergm</span>(<span class="at">formula =</span> genres_net <span class="sc">~</span> edges)</span>
+<span id="cb62-499"><a href="#cb62-499" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_rand)</span>
+<span id="cb62-500"><a href="#cb62-500" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-501"><a href="#cb62-501" aria-hidden="true" tabindex="-1"></a><span class="fu">### Edges &amp; node attributes</span></span>
+<span id="cb62-504"><a href="#cb62-504" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-505"><a href="#cb62-505" aria-hidden="true" tabindex="-1"></a>mod_homoph1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(genres_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb62-506"><a href="#cb62-506" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb62-507"><a href="#cb62-507" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_clustering_coefficient"</span>)</span>
+<span id="cb62-508"><a href="#cb62-508" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-509"><a href="#cb62-509" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_homoph1)</span>
+<span id="cb62-510"><a href="#cb62-510" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-511"><a href="#cb62-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-514"><a href="#cb62-514" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-515"><a href="#cb62-515" aria-hidden="true" tabindex="-1"></a>mod_homoph2 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(genres_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb62-516"><a href="#cb62-516" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb62-517"><a href="#cb62-517" aria-hidden="true" tabindex="-1"></a>        <span class="fu">absdiff</span>(<span class="st">"avg_clustering_coefficient"</span>) <span class="sc">+</span></span>
+<span id="cb62-518"><a href="#cb62-518" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nodecov</span>(<span class="st">"avg_node_degree"</span>) <span class="sc">+</span></span>
+<span id="cb62-519"><a href="#cb62-519" aria-hidden="true" tabindex="-1"></a>        <span class="fu">nodecov</span>(<span class="st">"avg_clustering_coefficient"</span>))</span>
+<span id="cb62-520"><a href="#cb62-520" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_homoph2)</span>
+<span id="cb62-521"><a href="#cb62-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-522"><a href="#cb62-522" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
